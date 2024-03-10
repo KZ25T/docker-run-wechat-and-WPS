@@ -31,18 +31,21 @@ RUN chmod 440 /etc/sudoers
 RUN echo "ibus-daemon -d -x" >> /home/${username}/.bashrc
 
 # install libs and software
-RUN apt install -y wget libasound2 qt5-style-plugins bsdmainutils xdg-utils unzip libnss3 libxss1 libglu1-mesa libxslt1.1 desktop-file-utils ibus ibus-pinyin
-## install weixin
-RUN wget "${weixinurl}" && dpkg -i ${weixindeb} && rm ${weixindeb}
-RUN chown root:root /opt/weixin/chrome-sandbox && chmod 4755 /opt/weixin/chrome-sandbox
-RUN echo 'alias wx="/usr/bin/weixin --no-sandbox &"' >> /home/${username}/.bashrc
-## install wps
-RUN wget "${wpsurl}" && dpkg -i ${wpsdeb} && rm ${wpsdeb}
-## install wps fonts
+## install input method and wps fonts
+RUN apt install -y wget unzip ibus ibus-pinyin
+RUN mkdir -p /usr/share/fonts/wps-office
 RUN wget "${ttfurl}" && unzip master.zip && cd ttf-wps-fonts-master && echo "y" | ./install.sh
 RUN cd .. && rm -r master.zip ttf-wps-fonts-master
 RUN wget "${msyhurl}" && unzip master.zip && cd Microsoft-Yahei-Mono-master && mv MSYHMONO.ttf /usr/share/fonts/wps-office/msyhmono.ttf
 RUN cd .. && rm -r master.zip Microsoft-Yahei-Mono-master
+## install wps
+RUN apt install -y qt5-style-plugins libglu1-mesa bsdmainutils xdg-utils libxslt1.1
+RUN wget "${wpsurl}" && dpkg -i ${wpsdeb} && rm ${wpsdeb}
+## install weixin
+RUN apt install -y libasound2 libnss3 libxss1 desktop-file-utils libgtk-3-0 libnotify4 libxtst6 libatspi2.0-0 libuuid1 libsecret-1-0
+RUN wget "${weixinurl}" && dpkg -i ${weixindeb} && rm ${weixindeb}
+RUN chown root:root /opt/weixin/chrome-sandbox && chmod 4755 /opt/weixin/chrome-sandbox
+RUN echo 'alias wx="/usr/bin/weixin --no-sandbox &"' >> /home/${username}/.bashrc
 
 # set ibus env
 ENV IBUS_ENABLE_SYNC_MODE=1
