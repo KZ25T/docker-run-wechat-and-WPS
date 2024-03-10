@@ -1,0 +1,63 @@
+FROM ubuntu:latest
+
+ARG weixinurl=http://archive.ubuntukylin.com/software/pool/partner/weixin_2.1.1_amd64.deb
+ARG weixindeb=weixin_2.1.1_amd64.deb
+ARG wechatdeb=wechat.deb
+ARG wpsurl=https://archive.ubuntukylin.com/software/pool/partner/wps-office_11.1.0.11719_amd64.deb
+ARG wpsdeb=wps-office_11.1.0.11719_amd64.deb
+ARG username=normal
+ARG uid=1000
+ARG GITHUB_MIRROR=hub.nuaa.cf
+ARG ttfurl=https://${GITHUB_MIRROR}/dv-anomaly/ttf-wps-fonts/archive/refs/heads/master.zip
+ARG msyhurl=https://${GITHUB_MIRROR}/chenyium/Microsoft-Yahei-Mono/archive/refs/heads/master.zip
+
+# copy deb
+COPY wechat-beta_1.0.0.145_amd64.deb /tmp/wechat.deb
+
+# change apt source
+RUN sed -i 's@//.*archive.ubuntu.com@//mirrors.ustc.edu.cn@g' /etc/apt/sources.list \
+&& sed -i 's/security.ubuntu.com/mirrors.ustc.edu.cn/g' /etc/apt/sources.list \
+&& apt update \
+&& apt install --no-install-recommends -y ca-certificates \
+&& sed -i 's/http:/https:/g' /etc/apt/sources.list \
+&& apt update \
+
+# add normal user
+&& adduser --disabled-password --uid ${uid} --gecos "" ${username} \
+## set to sudoer
+&& apt install --no-install-recommends -y sudo \
+&& adduser normal root \
+&& adduser normal sudo \
+&& chmod 640 /etc/sudoers \
+&& echo "normal ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
+&& chmod 440 /etc/sudoers \
+## start ibus-daemon normally
+&& echo "ibus-daemon -d -x" >> /home/${username}/.bashrc \
+
+# install libs and software
+## install input method and wps fonts
+&& apt install --no-install-recommends -y wget unzip ibus ibus-pinyin \
+&& mkdir -p /usr/share/fonts/wps-office \
+&& wget "${ttfurl}" && unzip master.zip && cd ttf-wps-fonts-master && echo "y" | ./install.sh \
+&& cd .. && rm -r master.zip ttf-wps-fonts-master \
+&& wget "${msyhurl}" && unzip master.zip && cd Microsoft-Yahei-Mono-master && mv MSYHMONO.ttf /usr/share/fonts/wps-office/msyhmono.ttf \
+&& cd .. && rm -r master.zip Microsoft-Yahei-Mono-master \
+## install wps
+&& apt install --no-install-recommends -y qt5-style-plugins libglu1-mesa bsdmainutils xdg-utils libxslt1.1 \
+&& wget "${wpsurl}" && dpkg -i ${wpsdeb} && rm ${wpsdeb} \
+## wechat-beta
+### install depends
+&& apt install --no-install-recommends -y iproute2 shared-mime-info desktop-file-utils libatomic1 libxrandr2 libxkbcommon0 libxkbcommon-x11-0 libxcb-glx0 libxcb-randr0 libxcb-icccm4 libxcb-shm0 libxcb-render0 libxcb-image0 libxcb-xfixes0 libxcb-sync1 libxcb-shape0 libxcb-render-util0 libxcb-keysyms1 libx11-xcb1 libfontconfig1 libdbus-1-3 libnss3 libasound2 \
+### copy old files
+&& wget "${weixinurl}" && mkdir /weixin && dpkg -X ${weixindeb} /weixin \
+&& cd /weixin && cp usr/lib/libactivation.so /usr/lib && cp etc/.kyact /etc && cp etc/LICENSE /etc && cp etc/lsb-release-ukui /etc/lsb-release \
+&& cd .. && rm -r ${weixindeb} /weixin \
+### install new wechat
+&& dpkg -i /tmp/wechat.deb \
+&& rm /tmp/wechat.deb
+
+# set ibus env
+ENV IBUS_ENABLE_SYNC_MODE=1
+ENV GTK_IM_MODULE=ibus
+ENV QT_IM_MODULE=ibus
+ENV XMODIFIERS=@im=ibus
