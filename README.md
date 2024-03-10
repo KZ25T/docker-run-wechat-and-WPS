@@ -2,7 +2,7 @@
 
 英文版没有，也没必要有
 
-No English version, because it is defined for linux users in China.
+No English version, because it is designed for linux users in China.
 
 ## 起因
 
