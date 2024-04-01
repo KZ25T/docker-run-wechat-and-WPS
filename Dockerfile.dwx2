@@ -40,14 +40,15 @@ RUN sed -i 's@//.*archive.ubuntu.com@//mirrors.ustc.edu.cn@g' /etc/apt/sources.l
 && mkdir -p /usr/share/fonts/wps-office \
 && wget "${ttfurl}" && unzip master.zip && cd ttf-wps-fonts-master && echo "y" | ./install.sh \
 && cd .. && rm -r master.zip ttf-wps-fonts-master \
-&& wget "${msyhurl}" && unzip master.zip && cd Microsoft-Yahei-Mono-master && mv MSYHMONO.ttf /usr/share/fonts/wps-office/msyhmono.ttf \
-&& cd .. && rm -r master.zip Microsoft-Yahei-Mono-master \
 ## install wps
 && apt install --no-install-recommends -y qt5-style-plugins libglu1-mesa bsdmainutils xdg-utils libxslt1.1 \
 && cd /tmp && dpkg -i ${wpsdeb} && rm ${wpsdeb} \
 ## wechat-beta
 ### install depends
 && apt install --no-install-recommends -y iproute2 shared-mime-info desktop-file-utils libatomic1 libxrandr2 libxkbcommon0 libxkbcommon-x11-0 libxcb-glx0 libxcb-randr0 libxcb-icccm4 libxcb-shm0 libxcb-render0 libxcb-image0 libxcb-xfixes0 libxcb-sync1 libxcb-shape0 libxcb-render-util0 libxcb-keysyms1 libx11-xcb1 libfontconfig1 libdbus-1-3 libnss3 libasound2 \
+### install chinese fonts
+&& wget "${msyhurl}" && unzip master.zip && cd Microsoft-Yahei-Mono-master && mv MSYHMONO.ttf /usr/share/fonts/wps-office/msyhmono.ttf \
+&& cd .. && rm -r master.zip Microsoft-Yahei-Mono-master \
 ### copy old files
 && cd /tmp && mkdir /weixin && dpkg -X ${weixindeb} /weixin \
 && cd /weixin && cp usr/lib/libactivation.so /usr/lib && cp etc/.kyact /etc && cp etc/LICENSE /etc && cp etc/lsb-release-ukui /etc/lsb-release \
