@@ -58,6 +58,23 @@ WPS有 linux 版，不过 linux 版看起来也很有些问题，比如不知道
 
 我的构建结果，两种方案的大小分别为 3.14 GB 和 3.32 GB，采取 Dockerfile.cwx2 构建结果为 2.73 GB
 
+#### 如果不安装 WPS
+
+请删除 dockerfile 里的：
+
+```text
+## install input method and wps fonts
+到
+## wechat-beta
+中间的那几行，以及
+
+&& echo "ibus-daemon -d -x" >> /home/${username}/.bashrc \
+
+这一行。
+```
+
+另外还要删除文件开始时的 COPY 和 ARGS 相关的一部分（不删也行）
+
 ### 运行
 
 ```bash
