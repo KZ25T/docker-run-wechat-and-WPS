@@ -13,7 +13,7 @@ No English version, because it is designed for linux users in China.
 - （不推荐）第一个使用优麒麟封装的微信，那个是用网页版微信封装的，**不是 wine**，勉强算是能运行，但不稳定。
 - （推荐）第二个使用的最新泄露的 linux 原生支持的微信，不过是测试版，存在一些问题，但总归还算稳定。
 
-在我的 docker 里，两个微信**都无法输入中文**，但支持剪切板直通（包括图片），所以可以**从外部输入中文之后复制粘贴到微信里**。这俩微信都不支持 ibus，而 fcitx 的安装体积大且麻烦，所以我只使用了 ibus 支持 wps 的输入。（我觉得 wps 对输入的要求更高，微信输入频率较低，闲聊的都用手机了，所以优先满足 wps）
+在我的 docker 里，两个微信**都无法输入中文**，但支持剪切板直通（包括图片），所以可以**从外部输入中文之后复制粘贴到微信里**。这俩微信都不支持 ibus（但是需要读取 ibus 的 machine-id），而 fcitx 的安装体积大且麻烦，所以我只使用了 ibus 支持 wps 的输入。（我觉得 wps 对输入的要求更高，微信输入频率较低，闲聊的都用手机了，所以优先满足 wps）微信也不能把时间设置为 UTC+8，很恶心，只能说是作为一个简单的应急使用，不建议长期使用。
 
 WPS有 linux 版，不过 linux 版看起来也很有些问题，比如不知道会添加什么启动项，导致每次登录都会产生一个目录 `~/模板` 而不是遵循 `XDG_TEMPLATES_DIR`（参见`~/.config/user-dirs.dirs`），跟开发人员说了他们觉得这是 feature 而不是 bug，那我也觉得你这玩意是流氓软件而不是规范软件。另外从终端启动根本不打印错误信息，运行错误都不知道怎么错的，我好不容易给调好了，所以做成 docker 用。
 
@@ -62,7 +62,7 @@ WPS有 linux 版，不过 linux 版看起来也很有些问题，比如不知道
 
 只安装微信需要做如下修改：
 
-仅完成对“wget网速太慢”方法的测试，另外几个方法没有试过。
+仅完成对“wget网速太慢”方法的测试（也就是 `Dockerfile.dwx2`），另外几个方法没有试过。
 
 请删除 dockerfile 里的：
 
@@ -102,8 +102,26 @@ libxcomposite1 libxdamage1 libxfixes3 libcairo2 libatk-bridge2.0-0 libatk1.0-0 l
 因为只需要运行微信，所以可以在 dockerfile 里设置容器启动命令：
 
 ```dockerfile
-CMD [ "sh", "-c", "wechat&" ]
+CMD [ "sh", "-c", "wechat" ]
 ```
+
+这样首次创建容器时，不需要 `run` 后带 `-it`，后续启动也不需要 `-ai`
+
+这种情况我们可以做成一个图标：
+
+```text
+[Desktop Entry]
+Exec=docker start 容器编号
+Name=wechat
+Name[zh_CN]=微信
+Icon=weixin
+Terminal=false
+Type=Application
+```
+
+容器编号通过 `docker container ls -a` 的 container id 取得。
+
+写到桌面上一个叫 `wechat.desktop` 文件里，双击即可执行（我只在我的 xfce 里测试过可用）
 
 ### 运行
 
