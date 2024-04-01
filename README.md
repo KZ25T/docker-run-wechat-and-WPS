@@ -60,6 +60,10 @@ WPS有 linux 版，不过 linux 版看起来也很有些问题，比如不知道
 
 #### 如果不安装 WPS
 
+只安装微信需要做如下修改：
+
+仅完成对“wget网速太慢”方法的测试，另外几个方法没有试过。
+
 请删除 dockerfile 里的：
 
 ```text
@@ -74,6 +78,32 @@ WPS有 linux 版，不过 linux 版看起来也很有些问题，比如不知道
 ```
 
 另外还要删除文件开始时的 COPY 和 ARGS 相关的一部分（不知道怎么删 ARGS 的话，不删也行）
+
+```text
+我大概说一下怎么删吧。
+首先是 ARG ttfurl 和 ARG wpsdeb 那一行。
+其次是 COPY wpsdeb 或 ARG wpsurl
+```
+
+然后在注释 wechat beta 下的那一行 apt install 后面加上几个依赖：
+
+```text
+libxcomposite1 libxdamage1 libxfixes3 libcairo2 libatk-bridge2.0-0 libatk1.0-0 libpango-1.0-0 libgbm1 wget unzip
+```
+
+在下一行再加上：
+
+```bash
+&& mkdir -p /var/lib/dbus /usr/share/fonts/wps-office && echo "xxxxxx" > /var/lib/dbus/machine-id \
+```
+
+其中 `xxxxxx` 是 32 位 16 进制数，可以使用 `dbus-uuidgen` 或 `uuidgen` 生成，也可以自己随便写一个。
+
+因为只需要运行微信，所以可以在 dockerfile 里设置容器启动命令：
+
+```dockerfile
+CMD [ "sh", "-c", "wechat&" ]
+```
 
 ### 运行
 
