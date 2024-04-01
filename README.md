@@ -4,6 +4,8 @@
 
 No English version, because it is designed for linux users in China.
 
+注：本文内容全面但比较乱，推荐去看[快速使用](./README.2.md)
+
 ## 起因
 
 国内 linux 用户，很多都对微信比较头疼。这软件很不干净，目录乱的很，运行条件也奇奇怪怪，速度也慢。
