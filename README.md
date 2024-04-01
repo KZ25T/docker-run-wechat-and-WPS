@@ -32,13 +32,14 @@ WPS有 linux 版，不过 linux 版看起来也很有些问题，比如不知道
 
 - 下载本仓库。
 - 下载新版微信安装包：[下载链接](https://www.52pojie.cn/thread-1896902-1-1.html)，把文件 `wechat-beta_1.0.0.145_amd64.deb` 放在本仓库根目录内，也就是和 `README.md` 处于同一目录。该下载链接需要注册123网盘，如果你认识本仓库的作者可以直接索取。
-- 执行 `docker build . -f Dockerfile.cwx2`，大概 3-10 分钟就好了（推荐使用 `Dockerfile.cwx2`，构建结果更小，也可使用 Dockerfile.wx2）。
+- 执行 `docker build . -f Dockerfile.cwx2`，大概 3-10 分钟就好了（推荐使用 `Dockerfile.cwx2`，构建结果更小，也可使用 `Dockerfile.wx2`）。
 
 **需要注意的是**（参见 build 使用的 dockerfile）：
 
 - wps 官网的 cdn 比较奇怪，所以我这里还使用优麒麟的软件源，以免出什么问题。
 - 这个 docker 会自动创建普通用户，默认用户名为 normal，如果需要自己改用户名（改不改没啥影响）请修改你使用的 dockerfile 的第 7 或 8 行（ARG username那一行）。如果你的主机的用户 UID（`echo $UID`）不是 1000，请修改第 8 或 9 行（ARG uid那一行）为你的 UID 数，否则显示不出来。
 - 第 9 行设置 GitHub 镜像，如果有连接问题请自行挑选适合自己的镜像。
+- 那个下载链接上似乎有更新新版本（截止本次commit已达到 238），安装时把对应的 dockerfile 里版本（`Dockerfile.cwx2`第15行）改一下就好。
 
 我的构建结果，两种方案的大小分别为 3.14 GB 和 3.32 GB，采取 Dockerfile.cwx2 构建结果为 2.73 GB
 
