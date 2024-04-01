@@ -119,7 +119,7 @@ Terminal=false
 Type=Application
 ```
 
-容器编号通过 `docker container ls -a` 的 container id 取得。
+容器编号通过 `docker container ls -a` 的 container id 取得。`Icon` 字段可能需要考虑你自己电脑有没有对应的图标，没有图标的话可以去掉。
 
 写到桌面上一个叫 `wechat.desktop` 文件里，双击即可执行（我只在我的 xfce 里测试过可用）
 
