@@ -51,7 +51,7 @@ RUN sed -i 's@//.*archive.ubuntu.com@//mirrors.ustc.edu.cn@g' /etc/apt/sources.l
 ### copy old files
 && cd /tmp && mkdir /weixin && dpkg -X ${weixindeb} /weixin \
 && cd /weixin && cp usr/lib/libactivation.so /usr/lib && cp etc/.kyact /etc && cp etc/LICENSE /etc && cp etc/lsb-release-ukui /etc/lsb-release \
-&& cd .. && rm -r ${weixindeb} /weixin \
+&& rm -r /tmp/${weixindeb} /weixin \
 ### install new wechat
 && dpkg -i /tmp/${wechatdeb} \
 && rm /tmp/${wechatdeb}
