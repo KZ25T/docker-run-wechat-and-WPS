@@ -23,16 +23,16 @@ WPS有 linux 版，不过 linux 版看起来也很有些问题，比如不知道
 
 记得**先看下边的注意**
 
-使用第一个微信：
+使用第一个微信（强烈不推荐，功能少还不稳定）：
 
 - 下载本仓库：`git clone https://gitee.com/KZ25T/docker-runs-wechat-and-wps.git`
-- 执行 `docker build .`，默认使用的 dockerfile 是 `./Dockerfile` 大概 5-10 分钟就好了。
+- 执行 `docker build .`，默认使用的 dockerfile 是 `./Dockerfile` 大概 3-5 分钟就好了。
 
 使用第二个微信：
 
 - 下载本仓库。
 - 下载新版微信安装包：[下载链接](https://www.52pojie.cn/thread-1896902-1-1.html)，把文件 `wechat-beta_1.0.0.145_amd64.deb` 放在本仓库根目录内，也就是和 `README.md` 处于同一目录。该下载链接需要注册123网盘，如果你认识本仓库的作者可以直接索取。
-- 执行 `docker build . -f Dockerfile.wx2`，大概 5-10 分钟就好了（推荐使用 `Dockerfile.cwx3`，构建结果更小）。
+- 执行 `docker build . -f Dockerfile.cwx2`，大概 3-10 分钟就好了（推荐使用 `Dockerfile.cwx2`，构建结果更小，也可使用 Dockerfile.wx2）。
 
 **需要注意的是**（参见 build 使用的 dockerfile）：
 
